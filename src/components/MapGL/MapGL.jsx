@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
-
+import ReactMapGL, { NavigationControl, Marker, Popup } from "react-map-gl";
+import getSuperMarkets from "../../services/serviceSuperMarkets";
+import LocationPin from "./LocationPin";
+import PinInfo from "./PinInfo";
 const navStyle = {
   position: "absolute",
   top: 0,
@@ -17,9 +19,6 @@ export default class MapGL extends Component {
         longitude: 103.8198,
         zoom: 10
       },
-      historicSites: {
-        sites: []
-      },
       popupInfo: null
     };
   }
@@ -32,12 +31,56 @@ export default class MapGL extends Component {
         key={`marker-${index}`}
         longitude={item.geometry.coordinates[0]}
         latitude={item.geometry.coordinates[1]}
-      />
+      >
+        <LocationPin
+          size={10}
+          onClick={() => this.setState({ popupInfo: item })}
+          type={item.type}
+        />
+      </Marker>
+    );
+  };
+
+  _renderPopup = () => {
+    const { popupInfo } = this.state;
+    return (
+      popupInfo && (
+        <Popup
+          tipSize={5}
+          anchor="top"
+          longitude={popupInfo.geometry.coordinates[0]}
+          latitude={popupInfo.geometry.coordinates[1]}
+          closeOnClick={false}
+          onClose={() => this.setState({ popupInfo: null })}
+        >
+          <PinInfo properties={popupInfo.properties} type={popupInfo.type} />
+        </Popup>
+      )
+    );
+  };
+  _displayPopup = popupInfo => {
+    return (
+      popupInfo && (
+        <Popup
+          tipSize={5}
+          anchor="top"
+          longitude={popupInfo.geometry.coordinates[0]}
+          latitude={popupInfo.geometry.coordinates[1]}
+          closeOnClick={false}
+          onClose={() => {
+            popupInfo = null;
+          }}
+        >
+          <PinInfo properties={popupInfo.properties} type={popupInfo.type} />
+        </Popup>
+      )
     );
   };
 
   render() {
-    const { sites } = this.state.historicSites;
+    console.log("map rendering");
+    const { sites, popUp } = this.props;
+    const dropPing = sites.length > 0 ? true : false;
     return (
       <ReactMapGL
         {...this.state.viewport}
@@ -46,7 +89,9 @@ export default class MapGL extends Component {
         onViewportChange={viewport => this.setState({ viewport })}
         mapboxApiAccessToken={`${process.env.REACT_APP_MAPBOX_API_KEY}`}
       >
-        {sites.map(this._renderMarker)}
+        {dropPing && sites.map(this._renderMarker)}
+        {this._renderPopup()}
+        {popUp && this._displayPopup(popUp)}
         <div className="nav" style={navStyle}>
           <NavigationControl onViewportChange={this._updateViewport} />
         </div>
@@ -54,3 +99,4 @@ export default class MapGL extends Component {
     );
   }
 }
+//
