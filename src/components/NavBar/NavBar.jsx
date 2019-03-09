@@ -4,7 +4,7 @@ import { Nav, NavItem } from "reactstrap";
 
 export default function NavBar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link className="navbar-brand" to="/">
         <i className="fab fa-fort-awesome" /> Hyperl
         <i className="fab fa-500px" />

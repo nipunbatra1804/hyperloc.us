@@ -14,7 +14,8 @@ const getClassName = type => {
     case "hawkerCentre":
       return "fas fa-utensils";
     default:
-      return "fab fa-500px";
+      return "far fa-compass";
+    //<i class="fab fa-500px"></i>
   }
 };
 

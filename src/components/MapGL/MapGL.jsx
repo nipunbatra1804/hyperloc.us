@@ -40,6 +40,13 @@ export default class MapGL extends Component {
       </Marker>
     );
   };
+  _renderPosition = (longitude, latitude) => {
+    return (
+      <Marker key={`marker-center`} longitude={longitude} latitude={latitude}>
+        <LocationPin size={10} type={"location"} />
+      </Marker>
+    );
+  };
 
   _renderPopup = () => {
     const { popupInfo } = this.state;
@@ -77,9 +84,27 @@ export default class MapGL extends Component {
     );
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.position.longitude === prevProps.position.longitude &&
+      this.props.position.latitude === prevProps.position.latitude
+    ) {
+      return;
+    }
+    const { position } = this.props;
+    console.log(position);
+    const viewport = { ...this.state.viewport };
+    viewport.longitude = position.longitude;
+    viewport.latitude = position.latitude;
+    viewport.zoom = 16;
+    console.log("component updating", viewport);
+    this.setState({ viewport: viewport });
+  }
+
   render() {
-    console.log("map rendering");
     const { sites, popUp } = this.props;
+    const { longitude, latitude } = this.state.viewport;
+    
     const dropPing = sites.length > 0 ? true : false;
     return (
       <ReactMapGL
@@ -99,4 +124,4 @@ export default class MapGL extends Component {
     );
   }
 }
-//
+//{this._renderPosition(longitude, latitude)}

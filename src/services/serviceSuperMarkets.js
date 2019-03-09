@@ -34,7 +34,6 @@ export function getSuperMarkets() {
     .then(data => {
       data.map(element => (element["type"] = "supermarket"));
       data.map(element => (element.properties = parseProperties(element.properties)));
-      console.log(data);
       return data;
     })
     .catch(err => {

@@ -5,7 +5,6 @@ const tabletojson = require("tabletojson");
 export default function PinInfo(props) {
   const { properties, type } = props;
 
-  console.log("Pin info");
   return (
     <div style={{ fontSize: "8px" }}>
       <div className="pin-title">{properties.name}</div>

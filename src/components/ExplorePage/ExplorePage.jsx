@@ -18,28 +18,34 @@ export default class ExplorePage extends Component {
         { name: "Supermarket", value: "supermarket" }
       ],
       selectedOption: null,
-      popInfo: null
+      popInfo: null,
+      currentPosition: {
+        latitude: null,
+        longitude: null
+      }
     };
   }
 
   async componentDidMount() {
     try {
       if (this.state.sites.length > 0) {
-        console.log("not resrendering");
         return;
       }
       const superMarkets = await getSuperMarkets();
       const clinics = await getClinics();
       const hawkers = await getHawkerCenters();
-      console.log(clinics);
       this.setState({ sites: [...clinics, ...superMarkets, ...hawkers] });
+      if (!(this.props.match.params.long && this.props.match.params.lat)) {
+        this.geolocation();
+      } else {
+        this.updateViewsAndStates();
+      }
     } catch (error) {
       console.log(error);
     }
   }
   handleOptionSelect = option => {
-    const finalOption = option.value === "all" ? null : option;
-    console.log("handleOptionSelect", finalOption);
+    const finalOption = option === null ? this.state.options[0] : option;
     this.setState({
       selectedOption: finalOption
     });
@@ -59,22 +65,52 @@ export default class ExplorePage extends Component {
 
     return filteredByOption;
   };
+  geolocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.updatePosition);
+    }
+  };
+  updatePosition = position => {
+    console.log(position);
+    const currentPosition = { ...this.state.currentPosition };
+    currentPosition.longitude = position.coords.longitude;
+    currentPosition.latitude = position.coords.latitude;
+    this.setState({ currentPosition: currentPosition });
+  };
 
-  /*.sort((first, second) => {
-      return first.localeCompare(second);
-    });*/
+  updateViewsAndStates = () => {
+    if (!(this.props.match.params.long && this.props.match.params.lat)) {
+      return;
+    }
+    const { long, lat, search } = this.props.match.params;
+    console.log(long, lat, search);
+    const currentPosition = { ...this.state.currentPosition };
+    const { options } = this.state;
+    const selectedOption = options.find(elem => elem.value === search);
+    currentPosition.longitude = parseFloat(long);
+    currentPosition.latitude = parseFloat(lat);
+
+    this.setState({
+      currentPosition: currentPosition,
+      selectedOption: selectedOption
+    });
+  };
+
   render() {
-    let { sites, options, popInfo } = this.state;
-
+    let { sites, options, popInfo, currentPosition } = this.state;
     const filteredSites = this.filterAndSortRestaurantList();
-    console.log("explore page re-rendering");
+
     return (
       <div data-testid="explore-page">
         <Container>
           <Row>
             <Col xs="6">
               {" "}
-              <MapGL sites={filteredSites} popUp={popInfo} />
+              <MapGL
+                sites={filteredSites}
+                popUp={popInfo}
+                position={currentPosition}
+              />
             </Col>
             <Col xs="6">
               <FilterMenu

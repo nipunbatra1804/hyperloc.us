@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import NavBar from "../NavBar/NavBar";
 import HomePage from "../HomePage/HomePage";
 import ExplorePage from "../ExplorePage/ExplorePage";
@@ -12,9 +12,13 @@ export default function AppPage() {
         <NavBar />
         <Switch>
           <Route path="/home" component={HomePage} />
+          <Route
+            path="/explore/:long/:lat/:search"
+            render={props => <ExplorePage {...props} />}
+          />
           <Route path="/explore" component={ExplorePage} />
           <Route path="/admin" component={AdminPage} />
-          <Route path="/" component={HomePage} />
+          <Redirect from="/" to="/home" />
         </Switch>
       </div>
     </BrowserRouter>

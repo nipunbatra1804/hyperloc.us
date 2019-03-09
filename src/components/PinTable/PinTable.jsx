@@ -8,7 +8,7 @@ export default function PinTable({ pins, handleClick, handleTableLeave }) {
   });
   return (
     <div style={{ height: "400px", overflow: "auto" }}>
-      <table className="table" style={{ fontSize: "7px" }}>
+      <table className="table" style={{ fontSize: "auto" }}>
         <thead>
           <tr>
             <th>Name</th>

@@ -9,8 +9,13 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
+.btn-group {
+  display: flex;
+}
+.btn {
+  flex-grow: 1;
+}
 
-
-
-.transparent-input { background: tranparent; }
-
+.transparent-input {
+  background: tranparent;
+}
