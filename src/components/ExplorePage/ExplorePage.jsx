@@ -59,7 +59,7 @@ export default class ExplorePage extends Component {
   filterAndSortRestaurantList = () => {
     const { sites, selectedOption } = this.state;
     console.log(selectedOption);
-    let filteredByOption = selectedOption
+    let filteredByOption = (selectedOption && selectedOption.value !=='all')
       ? sites.filter(site => selectedOption.value.includes(site.type))
       : sites;
 
