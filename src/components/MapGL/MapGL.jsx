@@ -92,19 +92,17 @@ export default class MapGL extends Component {
       return;
     }
     const { position } = this.props;
-    console.log(position);
     const viewport = { ...this.state.viewport };
     viewport.longitude = position.longitude;
     viewport.latitude = position.latitude;
-    viewport.zoom = 16;
-    console.log("component updating", viewport);
+    viewport.zoom = 14;
     this.setState({ viewport: viewport });
   }
 
   render() {
-    const { sites, popUp } = this.props;
-    const { longitude, latitude } = this.state.viewport;
-    
+    const { sites, popUp, position } = this.props;
+    const { longitude, latitude } = position;
+    //const { longitude, latitude } = this.state.viewport;
     const dropPing = sites.length > 0 ? true : false;
     return (
       <ReactMapGL
@@ -114,6 +112,7 @@ export default class MapGL extends Component {
         onViewportChange={viewport => this.setState({ viewport })}
         mapboxApiAccessToken={`${process.env.REACT_APP_MAPBOX_API_KEY}`}
       >
+        {this._renderPosition(longitude, latitude)}
         {dropPing && sites.map(this._renderMarker)}
         {this._renderPopup()}
         {popUp && this._displayPopup(popUp)}

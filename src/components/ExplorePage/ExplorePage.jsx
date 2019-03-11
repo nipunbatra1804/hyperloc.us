@@ -6,6 +6,14 @@ import { getSuperMarkets } from "../../services/serviceSuperMarkets";
 import { getHawkerCenters } from "../../services/serviceHawkers";
 import { getClinics } from "../../services/serviceClinics";
 import PinTable from "../PinTable/PinTable";
+import geolib from "geolib";
+
+const sortOptions = [
+  { name: "Distance", value: "distance" },
+  { name: "Name", value: "name" },
+  { name: "Postal Code", value: "postalcode" }
+];
+
 export default class ExplorePage extends Component {
   constructor(props) {
     super(props);
@@ -18,11 +26,13 @@ export default class ExplorePage extends Component {
         { name: "Supermarket", value: "supermarket" }
       ],
       selectedOption: null,
+      sortingOption: { name: "distance", value: "distance" },
       popInfo: null,
       currentPosition: {
-        latitude: null,
-        longitude: null
-      }
+        latitude: 1.3521,
+        longitude: 103.8198
+      },
+      selectedSortOption: { name: "Distance", value: "distance" }
     };
   }
 
@@ -50,19 +60,63 @@ export default class ExplorePage extends Component {
       selectedOption: finalOption
     });
   };
+  handleSortSelect = option => {
+    this.setState({ selectedSortOption: option });
+  };
+
   handlePinTableClick = element => {
     this.setState({ popInfo: element });
   };
   handleTableLeave = () => {
     this.setState({ popInfo: null });
   };
+
+  getDistance = pin => {
+    const currentPosition = { ...this.state.currentPosition };
+    const pinLocation = {
+      longitude: pin.geometry.coordinates[0],
+      latitude: pin.geometry.coordinates[1]
+    };
+    return geolib.getDistance(pinLocation, currentPosition);
+  };
+
+  compareDistance = (A, B) => {
+    return this.getDistance(A) - this.getDistance(B);
+  };
+
+  comparePostalCode = (A, B) => {
+    return A.properties.postCode - B.properties.postCode;
+  };
+  compareName = (A, B) => {
+    return A.properties.name.localeCompare(B.properties.name);
+  };
+
+  getCompareFunction = () => {
+    const { selectedSortOption } = this.state;
+    switch (selectedSortOption.value) {
+      case "distance":
+        return this.compareDistance;
+      case "postalcode":
+        return this.comparePostalCode;
+      case "name":
+        return this.compareName;
+      default:
+        return this.compareDistance;
+    }
+  };
   filterAndSortRestaurantList = () => {
     const { sites, selectedOption } = this.state;
-    console.log(selectedOption);
-    let filteredByOption = (selectedOption && selectedOption.value !=='all')
-      ? sites.filter(site => selectedOption.value.includes(site.type))
-      : sites;
+    let filteredByOption =
+      selectedOption && selectedOption.value !== "all"
+        ? sites.filter(
+            site =>
+              selectedOption.value.includes(site.type) &&
+              this.getDistance(site) < 500
+          )
+        : sites;
 
+    const compareFunc = this.getCompareFunction();
+    filteredByOption.length > 2 && filteredByOption.sort(compareFunc);
     return filteredByOption;
   };
   geolocation = () => {
@@ -71,7 +125,6 @@ export default class ExplorePage extends Component {
     }
   };
   updatePosition = position => {
-    console.log(position);
     const currentPosition = { ...this.state.currentPosition };
     currentPosition.longitude = position.coords.longitude;
     currentPosition.latitude = position.coords.latitude;
@@ -83,7 +136,6 @@ export default class ExplorePage extends Component {
       return;
     }
     const { long, lat, search } = this.props.match.params;
-    console.log(long, lat, search);
     const currentPosition = { ...this.state.currentPosition };
     const { options } = this.state;
     const selectedOption = options.find(elem => elem.value === search);
@@ -117,6 +169,8 @@ export default class ExplorePage extends Component {
                 options={options}
                 selected={this.state.selectedOption}
                 handleClick={this.handleOptionSelect}
+                sortOptions={sortOptions}
+                handleSortSelect={this.handleSortSelect}
               />
               <PinTable
                 pins={filteredSites}

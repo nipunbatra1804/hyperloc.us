@@ -8,7 +8,7 @@ export default function NavBar() {
       <Link className="navbar-brand" to="/">
         <i className="fab fa-fort-awesome" /> Hyperl
         <i className="fab fa-500px" />
-        c.us
+        c(us)
       </Link>
 
       <div className="navbar-nav">

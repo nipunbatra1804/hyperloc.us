@@ -14,7 +14,6 @@ export function getAddress(addressStr) {
       return response.json();
     })
     .then(data => {
-      console.log(data);
       return data.results[0].geometry;
     })
     .catch(error => console.log(error));
