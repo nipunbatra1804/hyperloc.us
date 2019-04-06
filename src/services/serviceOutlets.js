@@ -2,7 +2,7 @@ import axios from "axios";
 const inDev = process.env.PORT === 3000;
 
 const hyperlocusApi = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: inDev?"http://localhost:8080":"http://hyperlocus-server.herokuapp.com/",
   withCredentials: true
   //baseURL: "http://hyperlocus-server.herokuapp.com/"
 });
