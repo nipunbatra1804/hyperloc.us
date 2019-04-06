@@ -2,7 +2,9 @@ import axios from "axios";
 const inDev = process.env.PORT === 3000;
 
 const hyperlocusApi = axios.create({
-  baseURL: inDev?"http://localhost:8080":"http://hyperlocus-server.herokuapp.com/",
+  baseURL: inDev
+    ? "http://localhost:8080"
+    : "http://hyperlocus-server.herokuapp.com/",
   withCredentials: true
   //baseURL: "http://hyperlocus-server.herokuapp.com/"
 });
@@ -24,7 +26,6 @@ export async function getOutlets() {
       elem.geometry.coordinates[1] = elem.location.coordinates[1];
       return elem;
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.log(err);
@@ -45,9 +46,9 @@ export async function createOutlet(outlet, id) {
     place.tags = outlet.tags.split(/[\s,#]+/);
     if (!id) {
       place.location = null;
-      const response = await hyperlocusApi.post("/places", { place: place });
+      await hyperlocusApi.post("/places", { place: place });
     } else {
-      const response = await hyperlocusApi.patch(`/places/${id}`, place);
+      await hyperlocusApi.patch(`/places/${id}`, place);
     }
   } catch (err) {
     console.log(err);

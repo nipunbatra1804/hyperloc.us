@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Nav, NavItem } from "reactstrap";
 
 export default function NavBar(props) {
   const { username } = props;

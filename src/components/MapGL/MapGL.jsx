@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReactMapGL, { NavigationControl, Marker, Popup } from "react-map-gl";
-import getSuperMarkets from "../../services/serviceSuperMarkets";
 import LocationPin from "./LocationPin";
 import PinInfo from "./PinInfo";
 const navStyle = {

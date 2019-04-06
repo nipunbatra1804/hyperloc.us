@@ -1,12 +1,6 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { getAddress } from "../../services/serviceGMapsGeocode";
 import "./HomePage.css";
-
-const styleComments = {
-  padding: "400",
-  maxidth: "400",
-  border: "solid"
-};
 
 function HomePage(props) {
   const options = [

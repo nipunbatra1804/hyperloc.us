@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import MapGL from "../MapGL/MapGL";
 import FilterMenu from "../FilterMenu/FilterMenu";
-import { getSuperMarkets } from "../../services/serviceSuperMarkets";
-import { getHawkerCenters } from "../../services/serviceHawkers";
-import { getClinics } from "../../services/serviceClinics";
 import { getOutlets } from "../../services/serviceOutlets";
 
 import PinTable from "../PinTable/PinTable";
