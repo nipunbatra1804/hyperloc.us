@@ -5,6 +5,8 @@ import FilterMenu from "../FilterMenu/FilterMenu";
 import { getSuperMarkets } from "../../services/serviceSuperMarkets";
 import { getHawkerCenters } from "../../services/serviceHawkers";
 import { getClinics } from "../../services/serviceClinics";
+import { getOutlets } from "../../services/serviceOutlets";
+
 import PinTable from "../PinTable/PinTable";
 import geolib from "geolib";
 
@@ -41,10 +43,13 @@ export default class ExplorePage extends Component {
       if (this.state.sites.length > 0) {
         return;
       }
-      const superMarkets = await getSuperMarkets();
-      const clinics = await getClinics();
-      const hawkers = await getHawkerCenters();
-      this.setState({ sites: [...clinics, ...superMarkets, ...hawkers] });
+      //const superMarkets = await getSuperMarkets();
+      //const clinics = await getClinics();
+      //const hawkers = await getHawkerCenters();
+      //this.setState({ sites: [...clinics, ...superMarkets, ...hawkers] });
+
+      const foodOutlets = await getOutlets();
+      this.setState({ sites: [...foodOutlets] });
       if (!(this.props.match.params.long && this.props.match.params.lat)) {
         this.geolocation();
       } else {
@@ -112,7 +117,7 @@ export default class ExplorePage extends Component {
         : sites;
 
     filteredByOption = filteredByOption.filter(
-      site => this.getDistance(site) < 3000
+      site => this.getDistance(site) < 50000
     );
     const compareFunc = this.getCompareFunction();
     filteredByOption.length > 2 && filteredByOption.sort(compareFunc);
@@ -150,7 +155,6 @@ export default class ExplorePage extends Component {
   render() {
     let { options, popInfo, currentPosition } = this.state;
     const filteredSites = this.filterAndSortRestaurantList();
-
     return (
       <div data-testid="explore-page">
         <Container>
