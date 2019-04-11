@@ -6,6 +6,7 @@ import { getOutlets } from "../../services/serviceOutlets";
 
 import PinTable from "../PinTable/PinTable";
 import geolib from "geolib";
+import { getTowns } from "../../services/serviceTowns";
 
 const sortOptions = [
   { name: "Distance", value: "distance" },
@@ -18,6 +19,7 @@ export default class ExplorePage extends Component {
     super(props);
     this.state = {
       sites: [],
+      towns: [],
       options: [
         { name: "All", value: "all" },
         { name: "Clinics", value: "clinics" },
@@ -40,12 +42,10 @@ export default class ExplorePage extends Component {
       if (this.state.sites.length > 0) {
         return;
       }
-      //const superMarkets = await getSuperMarkets();
-      //const clinics = await getClinics();
-      //const hawkers = await getHawkerCenters();
-      //this.setState({ sites: [...clinics, ...superMarkets, ...hawkers] });
 
       const foodOutlets = await getOutlets();
+      const neighbourhoods = await getTowns();
+      console.log(neighbourhoods);
       this.setState({ sites: [...foodOutlets] });
       if (!(this.props.match.params.long && this.props.match.params.lat)) {
         this.geolocation();
@@ -150,7 +150,7 @@ export default class ExplorePage extends Component {
   };
 
   render() {
-    let { options, popInfo, currentPosition } = this.state;
+    let { options, popInfo, currentPosition, towns } = this.state;
     const filteredSites = this.filterAndSortRestaurantList();
     return (
       <div data-testid="explore-page">
@@ -160,6 +160,7 @@ export default class ExplorePage extends Component {
               {" "}
               <MapGL
                 sites={filteredSites}
+                towns={towns}
                 popUp={popInfo}
                 position={currentPosition}
               />
