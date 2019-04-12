@@ -46,7 +46,7 @@ export default class ExplorePage extends Component {
       const foodOutlets = await getOutlets();
       const neighbourhoods = await getTowns();
       console.log(neighbourhoods);
-      this.setState({ sites: [...foodOutlets] });
+      this.setState({ sites: [...foodOutlets], towns: [...neighbourhoods] });
       if (!(this.props.match.params.long && this.props.match.params.lat)) {
         this.geolocation();
       } else {
@@ -156,7 +156,7 @@ export default class ExplorePage extends Component {
       <div data-testid="explore-page">
         <Container>
           <Row>
-            <Col xs="6">
+            <Col md="12" lg="6">
               {" "}
               <MapGL
                 sites={filteredSites}
@@ -165,7 +165,7 @@ export default class ExplorePage extends Component {
                 position={currentPosition}
               />
             </Col>
-            <Col xs="6">
+            <Col md="12" lg="6">
               <FilterMenu
                 options={options}
                 selected={this.state.selectedOption}

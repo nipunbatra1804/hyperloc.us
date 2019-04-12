@@ -21,12 +21,7 @@ export default function PinTable({ pins, handleClick, handleTableLeave }) {
         <tbody>
           {sortedList.map((element, index) => (
             <tr key={index} data-testid="restaurant-table-row">
-              <td
-                onMouseEnter={() => handleClick(element)}
-                onMouseLeave={handleTableLeave}
-              >
-                {element.properties.name}
-              </td>
+              <td>{element.properties.name}</td>
               <td>{element.properties.address}</td>
               <td>{element.properties.postCode}</td>
               <td>
