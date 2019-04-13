@@ -35,7 +35,7 @@ export default class MapGL extends Component {
         <LocationPin
           size={10}
           onClick={() => this.setState({ popupInfo: item })}
-          type={item.type}
+          type={item.category}
         />
       </Marker>
     );

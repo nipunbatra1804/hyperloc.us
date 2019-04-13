@@ -49,7 +49,7 @@ export default class ExplorePage extends Component {
       }
       const { currentPosition } = this.state;
       const foodOutlets = await getOutlets();
-      const neighbourhoods = await getTowns(currentPosition);
+      const neighbourhoods = await getTowns();
       console.log(neighbourhoods);
       this.setState({ sites: [...foodOutlets], towns: [...neighbourhoods] });
     } catch (error) {
