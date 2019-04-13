@@ -85,7 +85,7 @@ export default class MapGL extends Component {
   };
   _getLayer = town => {
     return new GeoJsonLayer({
-      id: "geojson-layer",
+      id: `geojson-layer-${town.name}`,
       data: {
         type: "Feature",
         geometry: {

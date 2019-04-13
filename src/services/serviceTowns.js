@@ -7,12 +7,19 @@ const hyperlocusApi = axios.create({
     : "http://hyperlocus-server.herokuapp.com"
 });
 
-export async function getTowns() {
+export async function getTowns(location) {
   try {
-    console.log(inDev);
-    const foodOutlets = await hyperlocusApi.get("/towns");
-    console.log(foodOutlets);
-    return foodOutlets.data;
+    if (!location) {
+      const towns = await hyperlocusApi.get("/towns");
+      return towns.data;
+    }
+
+    const towns = await hyperlocusApi.get("/towns", {
+      location: {
+        coordinates: [location.longitude, location.latitude]
+      }
+    });
+    return towns.data;
   } catch (err) {
     console.log(err);
   }
